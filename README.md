@@ -4,7 +4,8 @@ A robust, console-based Machine Learning application designed to predict student
 ### 🚀 Key Features
 1. Automated Preprocessing: Handles data cleaning and feature selection (dropping non-predictive IDs).
 2. Model Reliability: Implements 5-Fold Cross-Validation to ensure the model's performance is stable and not a result of overfitting on the 200-record dataset.
-3. Modular Architecture: Separate scripts for training (train_model.py) and inference (predict.py), mimicking real-world deployment patterns.Interactive CLI: A user-friendly console interface for real-time predictions with input validation.
+3. Modular Architecture: Separate scripts for training (train_model.py) and inference (predict.py), mimicking real-world deployment patterns.
+4. Interactive CLI: A user-friendly console interface for real-time predictions with input validation.
 
 ### 🛠️ Tech Stack
 1. Language: Python 3.x
