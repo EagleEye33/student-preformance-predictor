@@ -1,6 +1,9 @@
 import joblib
 import numpy as np
 
+def clamp_score(score):
+    return float(np.clip(score, 0, 100))
+
 def run_console_app():
     # Load the saved model and feature list
     try:
@@ -22,14 +25,25 @@ def run_console_app():
             # Dynamic input based on the features we used in training
             user_inputs = []
             for feature in features:
-                val = float(input(f" -> {feature.replace('_', ' ').title()}: "))
+                if feature.lower() == 'hours_studied':
+                    total_hours = float(input(" -> Total Study Hours: "))
+                    duration = input(" -> Study Duration (week/month): ").strip().lower()
+                    while duration not in {"week", "month"}:
+                        print("⚠️ Please enter either 'week' or 'month'.")
+                        duration = input(" -> Study Duration (week/month): ").strip().lower()
+
+                    days = 7 if duration == "week" else 30
+                    val = total_hours / days
+                else:
+                    val = float(input(f" -> {feature.replace('_', ' ').title()}: "))
                 user_inputs.append(val)
 
             # Convert to numpy array for prediction
             input_array = np.array([user_inputs])
             
             # Predict
-            prediction = model.predict(input_array)[0]
+            raw_prediction = model.predict(input_array)[0]
+            prediction = clamp_score(raw_prediction)
             
             # Final Output Logic
             print("-" * 20)

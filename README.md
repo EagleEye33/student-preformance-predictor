@@ -5,7 +5,9 @@ A robust, console-based Machine Learning application designed to predict student
 1. Automated Preprocessing: Handles data cleaning and feature selection (dropping non-predictive IDs).
 2. Model Reliability: Implements 5-Fold Cross-Validation to ensure the model's performance is stable and not a result of overfitting on the 200-record dataset.
 3. Modular Architecture: Separate scripts for training (train_model.py) and inference (predict.py), mimicking real-world deployment patterns.
-4. Interactive CLI: A user-friendly console interface for real-time predictions with input validation.
+4. Bounded Predictions: Inference output is clamped to the valid exam score range of 0-100.
+5. Flexible Study Input: Enter total study hours over a week or month; the app converts it to daily hours for prediction.
+6. Interactive Interfaces: Includes both a Streamlit UI and a console interface for real-time predictions with input validation.
 
 ### 🛠️ Tech Stack
 1. Language: Python 3.x
@@ -52,10 +54,19 @@ student/
 python train_model.py
 ```
 
-2. Run Predictions:Launch the interactive console to input student data and receive score predictions.
+2. Run Streamlit UI:
+```bash
+streamlit run app.py
+```
+
+3. Run Console Predictions:Launch the interactive console to input student data and receive score predictions.
 ```bash
 python predict.py
 ```
+
+### 🧠 Prediction Input Notes
+- `hours_studied` is collected as total study hours for a selected duration (`week` or `month`), then converted to average daily hours for model compatibility.
+- Final predicted exam score is always bounded to the valid range: 0% to 100%.
 
 ### 🛡️ Model Validation (Reliability)
 To ensure the system is "ready to deploy," I utilized K-Fold Cross-Validation (k=5). This process splits the 200 records into 5 different subsets to verify that the R2 score remains consistent across different data slices, providing a more realistic estimate of performance on unseen data.

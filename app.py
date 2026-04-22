@@ -14,6 +14,9 @@ def load_model():
 
 model, features = load_model()
 
+def clamp_score(score):
+    return float(np.clip(score, 0, 100))
+
 # Header Section
 st.title("🎓 Student Performance Analytics")
 st.markdown("""
@@ -28,11 +31,23 @@ def get_user_input():
     inputs = []
     # Dynamic sliders based on trained features
     for feature in features:
+        feature_lower = feature.lower()
+
+        if feature_lower == 'hours_studied':
+            total_hours = st.sidebar.number_input(
+                "Total Study Hours",
+                min_value=0.0,
+                value=14.0,
+                step=0.5
+            )
+            duration = st.sidebar.selectbox("Study Duration", ["week", "month"])
+            days = 7 if duration == "week" else 30
+            val = total_hours / days
         # Check if feature is attendance to set 0-100 range
-        if 'attendance' in feature.lower():
+        elif 'attendance' in feature_lower:
             val = st.sidebar.slider(f"{feature.replace('_', ' ').title()}", 0, 100, 75)
         else:
-            val = st.sidebar.number_input(f"{feature.replace('_', ' ').title()}", value=0)
+            val = st.sidebar.number_input(f"{feature.replace('_', ' ').title()}", value=0.0)
         inputs.append(val)
     return np.array([inputs])
 
@@ -42,7 +57,8 @@ user_data = get_user_input()
 st.subheader("Model Prediction")
 
 if st.button("Calculate Prediction"):
-    prediction = model.predict(user_data)[0]
+    raw_prediction = model.predict(user_data)[0]
+    prediction = clamp_score(raw_prediction)
     
     # Display Result with Metrics
     col1, col2 = st.columns(2)
